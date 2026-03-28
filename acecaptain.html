@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>エースとキャプテン</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  /* ===== RESET & BASE ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  :root {
+    --mint: #a8dcd9;
+    --mint-light: #c8ecea;
+    --mint-bg: #b8e4e2;
+    --white: #ffffff;
+    --text: #333333;
+    --text-light: #555;
+    --border: #dddddd;
+    --accent-red: #e03030;
+    --accent-blue: #4a9fd4;
+    --accent-green: #5cb85c;
+    --nav-active: #000000;
+  }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: #f5f5f5;
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* ===== HEADER ===== */
+  .site-header {
+    background: var(--mint-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+
+
+ /* ===== NAV ===== */
+  nav {
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  nav ul li a {
+    display: block;
+    padding: 12px 24px;
+    text-decoration: none;
+    color: var(--text);
+    font-size: 14px;
+    transition: background 0.2s;
+    border-bottom: 3px solid transparent;
+  }
+
+  nav ul li a:hover { background: #e9e9e9; }
+  nav ul li a.active {
+    background: #646464;
+    border-bottom: 3px solid var(--nav-active);
+    color: #ffffff;
+    font-weight: 700;
+  }
+
+  /* ===== PAGE SYSTEM ===== */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ===== MAIN CONTENT ===== */
+  main { 
+    max-width: 70%; 
+    margin: 0 auto; 
+    padding: 24px 16px 48px;
+    background: var(--white);
+    min-height: 80vh;
+  }
+
+  /* ===== HOME PAGE ===== */
+
+
+  .home-header-center {
+    text-align: center;
+    margin: 20px 0;
+  }
+
+  .home-chars-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+
+  .home-tagline {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .home-subtitle {
+    font-size: 13px;
+    color: var(--text-light);
+  }
+
+  .home-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 16px 0;
+  }
+
+  /* Two column cards */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .char-card {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+  }
+
+  .char-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+
+  .char-card-label {
+    background: #303030;
+    padding: 6px 10px;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .char-card-label::before {
+    content: "▶";
+    font-size: 10px;
+    color: #9c9c9c;
+  }
+
+  .char-card-img-placeholder {
+    background: #a4d6d6;
+    width: 100%;
+    aspect-ratio: 3/4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #a1d6d8;
+  }
+
+  
+
+  /* Overview section */
+  .section-box {
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 16px;
+    margin: 16px 0;
+    background: #ffffff;
+
+  }
+
+  .section-title {
+    background-color: #303030;
+    font-weight: 700;
+    font-size: 15px;
+    color: #ffffff;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Relationship chart */
+  .relation-chart {
+    background: #fff;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+  }
+
+
+  .relation-img {
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .char-node {
+    position: absolute;
+    text-align: center;
+    font-size: 11px;
+  }
+
+  .char-node .face {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #e8e8e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin: 0 auto 4px;
+    border: 2px solid #aaa;
+  }
+
+ 
+
+  .relation-arrow {
+    position: absolute;
+    font-size: 11px;
+    color: #555;
+    background: rgba(255,255,255,0.9);
+    padding: 2px 4px;
+    border-radius: 2px;
+  }
+
+  .arrow-sibling { top: 48%; left: 50%; transform: translate(-50%, -50%); color: #e03030; font-weight: 700; }
+  .arrow-roommate { top: 55%; left: 22%; font-size: 10px; color: #d04090; }
+  .arrow-senior { top: 55%; right: 12%; font-size: 10px; color: #3060d0; }
+  .arrow-class { bottom: 18%; left: 50%; transform: translateX(-50%); color: #30a030; font-weight: 700; }
+  .arrow-older { top: 12%; left: 50%; transform: translateX(-50%); font-size: 10px; color: #a060c0; }
+
+  /* Updates */
+  .update-list { list-style: none; }
+  .update-item {
+    padding: 12px 0;
+    border-bottom: 1px dashed var(--border);
+  }
+  .update-item:last-child { border-bottom: none; }
+  .update-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .btn-read {
+    display: inline-block;
+    background: var(--mint);
+    color: #333;
+    padding: 3px 12px;
+    font-size: 12px;
+    border-radius: 2px;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid #8cc;
+    transition: background 0.2s;
+  }
+  .btn-read:hover { background: #85ccca; }
+
+  /* ===== CHARACTER PAGES ===== */
+  .breadcrumb {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 20px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .breadcrumb span { color: #666; }
+
+  .page-heading {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  /* Character intro card */
+  .char-intro {
+    display: grid;
+    grid-template-columns: 45% 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    padding: 12px;
+    align-items: start;
+  }
+
+  @media (max-width: 480px) {
+    .char-intro { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; }
+  }
+
+  .char-intro-img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    background: linear-gradient(135deg, #c0dde0 0%, #8ac0be 100%);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 52px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .char-intro-img::after {
+    position: absolute;
+    bottom: 4px;
+    right: 6px;
+    font-size: 10px;
+    color: rgba(255,255,255,0.7);
+    font-style: italic;
+  }
+
+  .gallery-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+ 
+
+  .img-link {
+    display: flex;
+    justify-content: center;
+    background-color: #303030;
+    color: #ffffff;
+    margin-top: 8px;
+    font-size: 11px;
+    cursor: pointer;
+    border-radius: 8px;
+  }
+  .img-link::before { content: "▶ "; color: #bbbbbb;}
+
+  .char-detail { padding: 4px 0; }
+  .char-detail .intro-note {
+    font-size: 12px;
+    color: #777;
+    margin-bottom: 8px;
+  }
+
+  .char-name {
+    background-color: #ececec;
+    font-size: 17px;
+    font-weight: 700;
+    margin: 8px 0 6px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .char-stat {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 4px;
+  }
+
+  .char-stat strong { color: var(--text); }
+
+  .char-desc {
+    font-size: 13px;
+    line-height: 1.7;
+    margin-top: 8px;
+    white-space: pre-line;
+  }
+
+  /* Lore section */
+  .lore-section {
+    background: #fafafa;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 16px;
+    margin: 16px 0;
+  }
+
+  .lore-list {
+    list-style: disc;
+    padding-left: 20px;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+
+  .lore-list li { margin-bottom: 6px; }
+
+  /* ===== STORIES PAGE ===== */
+  .story-filter {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 4px 14px;
+    border: 1px solid var(--border);
+    background: #f7f7f7;
+    font-size: 13px;
+    cursor: pointer;
+    border-radius: 2px;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--mint);
+    border-color: #8cc;
+  }
+
+  .story-list { list-style: none; }
+
+  .story-item {
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .story-item:last-child { border-bottom: none; }
+
+  .story-meta {
+    font-size: 11px;
+    color: #999;
+    margin-bottom: 6px;
+  }
+
+  .story-tag {
+    background: var(--mint-light);
+    padding: 1px 6px;
+    border-radius: 2px;
+    margin-right: 4px;
+    color: #4a8888;
+    font-size: 11px;
+  }
+
+  .story-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    cursor: pointer;
+    color: var(--text);
+    transition: color 0.2s;
+  }
+
+  .story-title:hover { color: var(--accent-blue); }
+
+  .story-excerpt {
+    font-size: 13px;
+    color: var(--text-light);
+    line-height: 1.7;
+    margin-bottom: 10px;
+  }
+
+  /* Story modal */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 20px;
+  }
+
+  .modal-overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+
+  .modal-box {
+    background: white;
+    max-width: 600px;
+    width: 100%;
+    border-radius: 4px;
+    padding: 24px;
+    margin: 20px auto;
+    position: relative;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 12px; right: 16px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #999;
+    background: none;
+    border: none;
+    line-height: 1;
+  }
+
+  .modal-close:hover { color: #333; }
+
+  .modal-meta { font-size: 12px; color: #999; margin-bottom: 4px; }
+  .modal-title { font-size: 20px; font-weight: 700; margin-bottom: 16px; }
+  .modal-body { font-size: 14px; line-height: 1.9; color: var(--text); white-space: pre-line; }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: #e8e8e8;
+    border-top: 1px solid var(--border);
+    padding: 12px 16px;
+    text-align: center;
+    font-size: 11px;
+    color: #999;
+  }
+
+  footer a { color: #999; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  /* ===== MISC ===== */
+  .mt8 { margin-top: 8px; }
+  .mt16 { margin-top: 16px; }
+
+  /* Scroll to top */
+  .scroll-top {
+    position: fixed;
+    bottom: 20px; right: 20px;
+    background: var(--mint);
+    border: 1px solid #8cc;
+    width: 36px; height: 36px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    text-decoration: none;
+    color: #333;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: background 0.2s;
+  }
+
+  .scroll-top:hover { background: #85ccca; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+ <img src="エースtouka.png"
+ style="max-width:550px;">
+</header>
+
+<!-- NAVIGATION -->
+<nav>
+  <ul>
+    <li><a href="#" class="active" onclick="showPage('home', this); return false;">ホーム</a></li>
+    <li><a href="#" onclick="showPage('ace', this); return false;">エース組</a></li>
+    <li><a href="#" onclick="showPage('captain', this); return false;">キャプテン組</a></li>
+    <li><a href="#" onclick="showPage('stories', this); return false;">小話</a></li>
+  </ul>
+</nav>
+
+<!-- ======================== HOME PAGE ======================== -->
+<div id="page-home" class="page active">
+<main>
+
+  <div class="home-header-center">
+    <div>
+      <img src="image.png">
+    </div>
+    <div class="home-tagline">エース2人とキャプテン2人</div>
+    <div class="home-subtitle">うちの子のまとめサイトです！</div>
+  </div>
+
+  <hr class="home-divider">
+
+  <div class="two-col">
+    <div class="char-card" onclick="showPage('ace', document.querySelectorAll('nav a')[1])">
+      <div class="char-card-label">エース組について</div>
+      <div class="char-card-img-placeholder"><img src="ace.png" style="width: 90%;"></div>
+    </div>
+    <div class="char-card" onclick="showPage('captain', document.querySelectorAll('nav a')[2])">
+      <div class="char-card-label">キャプテン組について</div>
+      <div class="char-card-img-placeholder"><img src="captain.png" style="width: 90%;"></div>
+    </div>
+  </div>
+
+  <!-- sousaku gaiyou -->
+  <div class="section-box">
+    <div class="section-title">【創作概要】</div>
+    <p style="font-size:13px; line-height:1.8;">
+      日下学園高等部を舞台に、同学年の３人(エース組２人＋現キャプちゃん)と一歳年上の前キャプちゃんがわちゃわちゃしてる日常を見守る創作。４人が高2＋高3の時空でも、前キャプちゃんだけ大学生の時空でも、萌えれば何でもあり。
+    </p>
+  </div>
+
+  <!-- Relationship chart -->
+  <div class="section-box">
+     <div class="section-title">【関係図】</div>
+    <div class="relation-chart">
+      <div class="relation-img"><img src="kankeizu.png" style="width:100%;"></div>
+  </div>
+
+  <!-- Updates -->
+  <div class="section-box">
+    <div class="section-title">【更新事項】</div>
+    <ul class="update-list">
+      <li class="update-item">
+        <div class="update-title">バスケ部くんは寝起きが悪い</div>
+        <a class="btn-read" onclick="openStory('story1'); return false;">≫続きを読む</a>
+      </li>
+      <li class="update-item">
+        <div class="update-title">互いに私が守らなきゃと思ってる</div>
+        <a class="btn-read" onclick="openStory('story2'); return false;">≫続きを読む</a>
+      </li>
+      <li class="update-item">
+        <div class="update-title">現キャプちゃんの髪型について</div>
+        <a class="btn-read" onclick="openStory('story3'); return false;">≫続きを読む</a>
+      </li>
+    </ul>
+  </div>
+</main>
+</div>
+
+<!-- ======================== ACE PAGE ======================== -->
+<div id="page-ace" class="page">
+<main>
+
+  <h1 class="page-heading">エース組</h1>
+
+  <div class="char-intro">
+    <div>
+      <div class="char-intro-img"><img src="ace.png" style="width: 90%;"></div>
+  
+      <div class="img-link">その他のイラスト/漫画はこちら</div>
+    </div>
+    <div class="char-detail">
+      <div class="intro-note">▶バスケ部エース（茶髪の方）と野球部エース（ぐるぐる目）の同室コンビ。</div>
+      <hr class="home-divider">
+
+      <div class="char-name">バスケ部くん</div>
+      <div class="char-stat"><strong>身長：</strong>201cm</div>
+      <div class="char-stat"><strong>特徴：</strong>縦長瞳孔（ヤマネコっぽい）</div>
+      <div class="char-desc">　アメリカに住んでいたが、プレー中のケガをきっかけに療養を兼ねて日本へ（高2の三月）（日本にルーツを持っていたから）
+　転入したとき、ちょうど野球部くんが一人部屋を使っていたため、寮の同室となる。
+　わりと流暢な関西弁で喋る。</div>
+
+      <hr class="home-divider" style="margin-top:12px;">
+
+      <div class="char-name">野球部くん</div>
+      <div class="char-stat"><strong>身長：</strong>187cm</div>
+      <div class="char-stat"><strong>特徴：</strong>ぐるぐる目（姉と同じ）／右頬にホクロ（姉と対称）</div>
+      <div class="char-desc">野球部のエースサウスポー。高3から主将を任され一人部屋をもらえることになったが、喜んだのも束の間、デカくてコワい留学生（？）が転がり込んできた。</div>
+    </div>
+  </div>
+
+  <!-- Lore -->
+  <div class="lore-section">
+    <ul class="lore-list">
+      <li>バスケ部くんはスペイン・デンマーク（母）とハーフ関西人（父）のクォーター。母親は5歳の頃他界しているが、父親の底無しの明るさによってまっすぐ育った。高校生ながらバスケ界隈ではそこそこ注目されているプレーヤーだが、ここ2年怪我が続いていて、更に本格的に療養を始めたため進路が注目されている。なお本人は全く気にしていない、前向き。（まだボール持つ腕ついとるし、走れるし、ヨユー）</li>
+      <li>ちなみに怪我自体は大したことなくて療養の理由じゃない。実際の理由は、ここ2年の怪我の原因になっている視力問題（バスケ部くんは母親をとくした交通事故で眼底骨折して、その時の後遺症かもしれないとのこと）。</li>
+      <li>野球部くんはバスケ部くんが有名なプレーヤーであることを知らない。バスケ部くんもプレーヤーとしての野球部くんをあまり知らない。</li>
+      <li>野球部は強豪で、部員が70人いる。一方男子バスケ部は弱小（部員8名）なので、バスケ部くんが来たことに泣いて喜び頬をつねりあった。</li>
+      <li>野球部くんは甲子園終わってもプロ野球志望届は出さないつもり、大学からスカウトされなかったらそれで野球終わりにしようと思ってる(高校である程度やれてもプロになったら自分みたいなプレーヤーはごまんといる)。バスケ部くんはボールを持てる限り死ぬまでバスケし続けるつもり。</li>
+    </ul>
+  </div>
+
+  <!-- Related stories -->
+  <div class="section-box">
+    <div class="section-title">【小話】</div>
+    <ul class="update-list">
+      <li class="update-item">
+        <div class="update-date">バスケ部くんは寝起きが悪い</div>
+        <a class="btn-read" onclick="openStory('story1'); return false;">≫続きを読む</a>
+      </li>
+    </ul>
+  </div>
+</main>
+</div>
+
+<!-- ======================== CAPTAIN PAGE ======================== -->
+<div id="page-captain" class="page">
+<main>
+
+  <h1 class="page-heading">キャプテン組</h1>
+
+  <div class="char-intro">
+    <div>
+      <div class="char-intro-img" style="background-color: #4a8888;"><img src="captain.png" style="width: 90%"></div>
+      <div class="img-link">その他のイラスト/漫画はこちら</div>
+    </div>
+    <div class="char-detail">
+      <div class="intro-note">▶女子バスケ部前キャプテン（ぐるぐる目）と現キャプテン（黒髪）の先輩後輩コンビ。</div>
+      <hr class="home-divider">
+
+      <div class="char-name">前キャプちゃん</div>
+      <div class="char-stat"><strong>身長：</strong>168cm</div>
+      <div class="char-stat"><strong>特徴：</strong>にこにこぐるぐる目／左頬にホクロ（弟と対称）</div>
+      <div class="char-desc">強豪バスケ部のキャプテン。
+自分で点を取るより、人を使ってゲームメイクする方が好き。
+身長は低めだが、どんなにプレッシャーがかかる場面でもずっとにこにこ笑ってるので、ディフェンスのマッチ相手にめちゃくちゃ怯えられる。
+コート上では正しく女王だけど、バスケ以外では意外と抜けてるところがある。
+ポジションはPG。3年時の背番号は4。</div>
+
+      <hr class="home-divider" style="margin-top:12px;">
+
+      <div class="char-name">現キャプちゃん</div>
+      <div class="char-stat"><strong>身長：</strong>179cm（高2時）→193cm（大学2年）</div>
+      <div class="char-stat"><strong>特徴：</strong>垂れ目吊り眉</div>
+      <div class="char-desc">同じく強豪バスケ部の次期キャプテン。
+高校一年の冬既に企業から話が来ていたほどの天才肌&努力家。真面目で勤勉。バスケだけが取り柄だと思ってる。
+オフェンスプレーが得意だけど、自分から前に出るのが苦手でディフェンスに回りがちだった(一年初期はポジション：センターだった)ところへ、前キャプちゃんがにこにこ笑顔で忍び寄り、無理やり引っ張り出し、名実ともにエースに仕立て上げた(それ以降はポジション：PF)。
+気が強そうとよく言われるけど、本当は引っ込み思案なので、前キャプの真似をしてどうにかキャプテンを頑張っていく。</div>
+  </div>
+  </div>
+
+  <!-- Lore -->
+  <div class="lore-section">
+    <ul class="lore-list">
+      <li>女バス前キャプも弟の野球部くんと同じように大学でバスケをやめるつもり。そのぶん後輩の現キャプには、もっと強くなれ、絶対にリーグプレーヤーになれという圧をもって接している。</li>
+      <li>次期主将に現キャプを指名したのは前キャプちゃん。この子の成長に1番必要なのはチーム内での立ち回り方/主将の経験だと思ったから。</li>
+      <li>なお、大学でやめるつもりだということも、現キャプちゃんに向けてる期待も憧れも嫉妬も口にはしない(この子の行く先に幸あれ！)</li>
+      <li>怒りのようなマイナスな感情でしか距離を縮めるタイミングを作れない不器用なふたり。</li>
+      <li>前キャプちゃんは、コート上では大胆なプレーするし相手を揺さぶるトラッシュトークも上手いけど、自分に繋がる人間関係においては尽く臆病。</li>
+      <li>キャプ組は高校生の時は不成立(他の寮生がいない時は一緒にお風呂入ったりするけど、その関係をはっきりした枠には嵌めない)。行動するのは現キャプから。高校卒業後、前キャプのいる大学に無理やり進学して、その下宿に無理やり上がり込む。≫「あの、大学卒業したらバスケやめるって聞いたんですけど」</li>
+    </ul>
+ </div>
+
+  <!-- Related stories -->
+  <div class="section-box">
+    <div class="section-title">【小話】</div>
+    <ul class="update-list">
+      <li class="update-item">
+        <div class="update-date">互いに私が守らなきゃと思ってる</div>
+        <a class="btn-read" onclick="openStory('story2'); return false;">≫続きを読む</a>
+      </li>
+      <li class="update-item">
+        <div class="update-date">現キャプちゃんの髪型について</div>
+        <a class="btn-read" onclick="openStory('story3'); return false;">≫続きを読む</a>
+      </li>
+    </ul>
+  </div>
+</main>
+</div>
+
+<!-- ======================== STORIES PAGE ======================== -->
+<div id="page-stories" class="page">
+<main>
+  <div class="story-filter">
+    <button class="filter-btn active" onclick="filterStories('all', this)">エース組</button>
+    <button class="filter-btn" onclick="filterStories('captain', this)">キャプテン組</button>
+    <button class="filter-btn" onclick="filterStories('other', this)">その他</button>
+  </div>
+
+  <ul class="story-list" id="story-list">
+    <li class="story-item" data-tag="ace">
+      <div class="story-title" onclick="openStory('story1')">バスケ部くんは寝起きが悪い</div>
+      <div class="story-excerpt">寝起きが悪いバスケ部くん。元から強面ではあるけど、朝は特にやばい。修羅の顔をしている。野球部くんはいつまで経っても慣れないので、毎朝「3ヶ」となっている。あの巨体が修羅の顔引っ提げてゆら...ゆら...とベッドから這い出てきた朝には、遂に地獄の門を開けてしまったと思った。でも機嫌が悪いとかそういうことはないので、修羅の顔のまま「…はよ（朝出る1番大きな声）」と挨拶してくれる。頑張っている。</div>
+      <a class="btn-read" onclick="openStory('story1')">続きを読む</a>
+    </li>
+    <li class="story-item" data-tag="captain">
+      <div class="story-title" onclick="openStory('story2')">互いに私が守らなきゃと思ってる</div>
+      <div class="story-excerpt">【現キャプちゃん→前キャプちゃん】大雪の翌朝。近所の神社へ初詣に行くキャプ組。白いダウンに白いミトングローブ、白いニット帽を装備して玄関先で待ってる前キャプちゃん。鼻歌歌ってる（カリス〇ックス。ちょっと間違って覚えてる）。そこへ現キャプちゃんがリビングからスリッパぱたぱた言わせながらやって来る。手には白のふわふわマフラー…</div>
+      <a class="btn-read" onclick="openStory('story2')">続きを読む</a>
+    </li>
+    <li class="story-item" data-tag="captain">
+      <div class="story-meta"><span class="story-tag">キャプテン組</span></div>
+      <div class="story-title" onclick="openStory('story3')">現キャプちゃんの髪型について</div>
+      <div class="story-excerpt">大学生になったら髪型変わるよという話です。</div>
+      <a class="btn-read" onclick="openStory('story3')">続きを読む</a>
+    </li>
+    <li class="story-item" data-tag="other">
+      <div class="story-meta"><span class="story-tag">その他</span></div>
+      <div class="story-title" onclick="openStory('story4')">サイト作成！</div>
+      <div class="story-excerpt">サイト作成した！</div>
+      <a class="btn-read" onclick="openStory('story4')">続きを読む</a>
+    </li>
+  </ul>
+</main>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#">みょーん</a> 
+</footer>
+
+<!-- Scroll to top -->
+<a class="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'}); return false;" title="ページ上部へ">▲</a>
+
+<!-- ======================== STORY MODAL ======================== -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('open')">✕</button>
+    <div class="modal-meta" id="modal-meta"></div>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ===== STORIES DATA =====
+const stories = {
+  story1: {
+    meta: "エース組",
+    title: "バスケ部くんは寝起きが悪い",
+    body: `寝起きが悪いバスケ部くん。
+    元から強面ではあるけど、朝は特にやばい。修羅の顔をしている。
+    野球部くんはいつまで経っても慣れないので、毎朝ﾋﾟｮｯとなっている。
+    あの巨体が修羅の顔引っ提げてゆら…ゆら…とベッドから這い出てきた朝には、遂に地獄の門を開けてしまったと思った。
+    でも機嫌が悪いとかそういうことはないので、修羅の顔のまま「…はよ(朝出る1番大きな声)」と挨拶してくれる。頑張っている。`
+  },
+  story2: {
+    meta: "キャプテン組",
+    title: "互いに私が守らなきゃと思ってる",
+    body: `【現キャプちゃん→前キャプちゃん】
+
+大雪の翌朝。近所の神社へ初詣に行くキャプ組。
+白いダウンに白いミトングローブ、白いニット帽を装備して玄関先で待ってる前キャプちゃん。鼻歌歌ってる(カリス〇ックス。ちょっと間違って覚えてる)。
+そこへ現キャプちゃんがリビングからスリッパぱたぱた言わせながらやって来る。手には白のふわふわマフラー。
+「結局いつも寒〜いって文句言い出すんですから」「これも巻いといてください」ってぷんすこしながら前キャプちゃんの首に巻いてあげる。
+「はーい」ってきゃっきゃ笑う前キャプちゃん。ふわふわマフラーに口元を埋める。梱包されまくってベイ〇ックスみたいになってる。
+(大福だ……)と心のなかで呟く現キャプちゃん。
+
+
+【前キャプちゃん→現キャプちゃん】
+
+現キャプちゃんは朝に弱め。でも意思は強いので、目覚ましが鳴ったら「ん゛ん〜……」って唸りながら体を起こす。えらい。
+(ちなみに大学時空(同棲)だと、そんなこんなで朝ごはん担当は前キャプちゃんになっている。ただし前キャプちゃんは料理が得意なわけではないので、基本的にパンとサラダチキンとバナナ。毎日やってるのでパンの焼き方だけは職人級。パンの種類×何を塗るかでバリエーションを出しているため冷蔵庫には色んな種類のジャム瓶がある。食パンとミルクコッペと黒糖ロールの日に加え、中に溶けたバターが入っているバターロールの日があり、その日は「…当たりですね」「当たりだね〜」と言い合うのがお決まりの流れとなっている。)
+リビングにのそのそやって来た現キャプちゃん。冬はそのままコタツに直行する。ただ二度寝してはいけないという意思はあるので寝転がらない。辛うじて座ってる。天板に頬をのせてしまっているのでもう寝そうではある。オーブンの中のパンを監視していた前キャプちゃんは、そんな現キャプちゃんの姿を見て(がんばれ……！)(頭が揺れてる)(耐えろ〜)(えらすぎる)と脳内応援上映してる。
+朝は三歳児だと思っている節がある。
+時々いたずら心が湧いて、肩を押して強制的に寝かせみることもある。前にやった時は、へにょへにょなお顔で威嚇しながら「うぅ……わたしの…どりょく…を……」って小さく小さく不満を訴えて寝落ちていった。前キャプちゃんは悶絶した。
+
+`
+  },
+  story3: {
+    meta: "キャプテン組",
+    title: "現キャプちゃんの髪型について",
+    body: `大学生になったら髪型変わるよという話です。
+
+前キャプ→染髪ブロンドミニボブ、大学生になっても変わらない
+現キャプ→ずーっとバージンヘア、大学生になったらボブにする、あと身長も伸びる！！！やったー！！
+ 
+ちなみに現キャプちゃんがずっとしてる前髪のまとめ方は、長い横髪一束に前髪を巻き付けてねじってゴムで止める、というかたち。ピンは使ってないし、三つ編みでもない。`
+  },
+  story4: {
+    meta: "その他",
+    title: "サイト作成！",
+    body: `サイト作成した！
+
+うちの子たちをまとめられる場所がほしくて作りました。
+これからちょこちょこ更新していくよん！よろしくお願いします！`
+  }
+};
+
+// ===== PAGE NAVIGATION =====
+function showPage(pageId, linkEl) {
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  // Show target
+  document.getElementById('page-' + pageId).classList.add('active');
+  // Update nav
+  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+  if (linkEl) linkEl.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ===== STORY MODAL =====
+function openStory(storyId) {
+  const s = stories[storyId];
+  if (!s) return;
+  document.getElementById('modal-meta').textContent = s.meta;
+  document.getElementById('modal-title').textContent = s.title;
+  document.getElementById('modal-body').textContent = s.body;
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal')) {
+    document.getElementById('modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+
+// ===== STORY FILTER =====
+function filterStories(tag, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  
+  document.querySelectorAll('.story-item').forEach(item => {
+    if (tag === 'all') {
+      item.style.display = '';
+    } else {
+      item.style.display = item.dataset.tag === tag ? '' : 'none';
+    }
+  });
+}
+
+// Close modal on ESC
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+});
+</script>
+</body>
+</html>
